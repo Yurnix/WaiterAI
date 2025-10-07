@@ -33,6 +33,8 @@ CREATE TABLE offerings (
     description TEXT,
     price DECIMAL(10, 2) NOT NULL,
     category_id INT,
+    recommended BOOLEAN NOT NULL DEFAULT FALSE,
+    quantity INT NOT NULL DEFAULT 0,
     FOREIGN KEY (category_id) REFERENCES menu_categories(category_id) ON DELETE SET NULL
 );
 
@@ -68,6 +70,7 @@ CREATE TABLE order_items (
     order_status ENUM('pending', 'preparing', 'served', 'paid', 'cancelled') DEFAULT 'pending',
     sys_creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     sys_update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    quantity INT NOT NULL DEFAULT 1,
     INDEX(order_id),
     FOREIGN KEY (offering_id) REFERENCES offerings(offering_id)
 );

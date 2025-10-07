@@ -31,7 +31,8 @@ class Offering(Base):
     description = Column(Text)
     price = Column(DECIMAL(10, 2), nullable=False)
     category_id = Column(Integer, ForeignKey('menu_categories.category_id', ondelete='SET NULL'))
-
+    recommended = Column(Boolean, nullable=False, default=False)
+    quantity = Column(Integer, nullable=False, default=0)
     category = relationship("MenuCategory", back_populates="offerings")
     ingredients = relationship("OfferingIngredient", back_populates="offering", cascade="all, delete-orphan")
     order_items = relationship("OrderItem", back_populates="offering")
@@ -79,7 +80,7 @@ class OrderItem(Base):
     order_status = Column(Enum('pending', 'preparing', 'served', 'paid', 'cancelled'), server_default='pending')
     sys_creation_date = Column(TIMESTAMP, server_default=func.now())
     sys_update_date = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
-    
+    quantity = Column(Integer, nullable=False, default=1)
     offering = relationship("Offering", back_populates="order_items")
     modifications = relationship("OrderItemModification", back_populates="order_item", cascade="all, delete-orphan")
 

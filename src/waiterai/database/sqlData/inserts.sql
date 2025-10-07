@@ -1,4 +1,3 @@
-
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- 2. Truncate Tables (Order doesn't matter much now, but keeping a logical order is good practice)
@@ -107,10 +106,10 @@ INSERT INTO ingredient_attributes (ingredient_id, attribute_id) VALUES
 
 -- 3A. ANTIPASTI (Category ID: 1)
 -- -----------------------------------------------------------------
-INSERT INTO offerings (offering_id, name, description, price, category_id) VALUES
-(1, 'Bruschetta al Pomodoro', 'Toasted artisan bread with fresh tomatoes, garlic, basil, and a drizzle of extra virgin olive oil.', 8.00, 1),
-(2, 'Burrata con Prosciutto di Parma', 'Creamy burrata cheese served with 24-month aged Parma ham, arugula, and a balsamic glaze.', 15.00, 1),
-(3, 'Carpaccio di Manzo', 'Thinly sliced raw beef, topped with arugula, shaved Parmigiano Reggiano, capers, and a lemon-oil dressing.', 14.00, 1);
+INSERT INTO offerings (offering_id, name, description, price, category_id, quantity, recommended) VALUES
+(1, 'Bruschetta al Pomodoro', 'Toasted artisan bread with fresh tomatoes, garlic, basil, and a drizzle of extra virgin olive oil.', 8.00, 1, 100, FALSE),
+(2, 'Burrata con Prosciutto di Parma', 'Creamy burrata cheese served with 24-month aged Parma ham, arugula, and a balsamic glaze.', 15.00, 1, 100, FALSE),
+(3, 'Carpaccio di Manzo', 'Thinly sliced raw beef, topped with arugula, shaved Parmigiano Reggiano, capers, and a lemon-oil dressing.', 14.00, 1, 150, TRUE);
 
 INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALUES
 -- Bruschetta
@@ -123,12 +122,12 @@ INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALU
 
 -- 3B. PRIMI (Category ID: 2)
 -- -----------------------------------------------------------------
-INSERT INTO offerings (offering_id, name, description, price, category_id) VALUES
-(4, 'Spaghetti alla Carbonara', 'A Roman classic with crispy guanciale, rich egg yolk, Pecorino Romano cheese, and black pepper.', 15.00, 2),
-(5, 'Penne all''Arrabbiata', 'Penne pasta in a fiery tomato and garlic sauce, finished with fresh parsley.', 12.00, 2),
-(6, 'Risotto ai Funghi Porcini', 'Creamy Arborio rice risotto with savory porcini mushrooms, white wine, and Parmigiano.', 16.00, 2),
-(7, 'Lasagne alla Bolognese', 'Layers of fresh pasta with a rich beef and pork ragù, béchamel sauce, and baked with Parmigiano.', 14.00, 2),
-(8, 'Trofie al Pesto', 'Traditional Ligurian pasta with a fresh basil pesto, pine nuts, and Parmigiano Reggiano.', 13.00, 2);
+INSERT INTO offerings (offering_id, name, description, price, category_id, quantity, recommended) VALUES
+(4, 'Spaghetti alla Carbonara', 'A Roman classic with crispy guanciale, rich egg yolk, Pecorino Romano cheese, and black pepper.', 15.00, 2, 100, FALSE),
+(5, 'Penne all''Arrabbiata', 'Penne pasta in a fiery tomato and garlic sauce, finished with fresh parsley.', 12.00, 2, 100, FALSE),
+(6, 'Risotto ai Funghi Porcini', 'Creamy Arborio rice risotto with savory porcini mushrooms, white wine, and Parmigiano.', 16.00, 2, 150, TRUE),
+(7, 'Lasagne alla Bolognese', 'Layers of fresh pasta with a rich beef and pork ragù, béchamel sauce, and baked with Parmigiano.', 14.00, 2, 100, FALSE),
+(8, 'Trofie al Pesto', 'Traditional Ligurian pasta with a fresh basil pesto, pine nuts, and Parmigiano Reggiano.', 13.00, 2, 100, FALSE);
 
 INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALUES
 -- Carbonara
@@ -145,11 +144,11 @@ INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALU
 
 -- 3C. SECONDI (Category ID: 3)
 -- -----------------------------------------------------------------
-INSERT INTO offerings (offering_id, name, description, price, category_id) VALUES
-(9, 'Osso Buco alla Milanese', 'Slow-cooked veal shank in a white wine and vegetable broth, served with traditional gremolata.', 28.00, 3),
-(10, 'Tagliata di Manzo', 'Sliced grilled beef steak served over a bed of arugula, topped with cherry tomatoes and shaved Parmigiano.', 25.00, 3),
-(11, 'Pollo ai Funghi', 'Pan-seared chicken breast in a creamy mushroom and white wine sauce.', 19.00, 3),
-(12, 'Spigola al Forno', 'Oven-baked sea bass with cherry tomatoes, black olives, capers, and fresh herbs.', 24.00, 3);
+INSERT INTO offerings (offering_id, name, description, price, category_id, quantity, recommended) VALUES
+(9, 'Osso Buco alla Milanese', 'Slow-cooked veal shank in a white wine and vegetable broth, served with traditional gremolata.', 28.00, 3, 150, TRUE),
+(10, 'Tagliata di Manzo', 'Sliced grilled beef steak served over a bed of arugula, topped with cherry tomatoes and shaved Parmigiano.', 25.00, 3, 100, FALSE),
+(11, 'Pollo ai Funghi', 'Pan-seared chicken breast in a creamy mushroom and white wine sauce.', 19.00, 3, 100, FALSE),
+(12, 'Spigola al Forno', 'Oven-baked sea bass with cherry tomatoes, black olives, capers, and fresh herbs.', 24.00, 3, 100, FALSE);
 
 INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALUES
 -- Osso Buco
@@ -164,10 +163,10 @@ INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALU
 
 -- 3D. CONTORNI (Category ID: 4)
 -- -----------------------------------------------------------------
-INSERT INTO offerings (offering_id, name, description, price, category_id) VALUES
-(13, 'Patate al Forno', 'Oven-roasted potatoes with rosemary, garlic, and sea salt.', 6.00, 4),
-(14, 'Insalata Mista', 'A mixed green salad with tomatoes, carrots, and a simple vinaigrette.', 5.00, 4),
-(15, 'Verdure Grigliate', 'A selection of seasonal grilled vegetables, including eggplant, zucchini, and bell peppers.', 7.00, 4);
+INSERT INTO offerings (offering_id, name, description, price, category_id, quantity, recommended) VALUES
+(13, 'Patate al Forno', 'Oven-roasted potatoes with rosemary, garlic, and sea salt.', 6.00, 4, 150, TRUE),
+(14, 'Insalata Mista', 'A mixed green salad with tomatoes, carrots, and a simple vinaigrette.', 5.00, 4, 100, FALSE),
+(15, 'Verdure Grigliate', 'A selection of seasonal grilled vegetables, including eggplant, zucchini, and bell peppers.', 7.00, 4, 100, FALSE);
 
 INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALUES
 -- Patate
@@ -180,13 +179,13 @@ INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALU
 
 -- 3E. PIZZE (Category ID: 5)
 -- -----------------------------------------------------------------
-INSERT INTO offerings (offering_id, name, description, price, category_id) VALUES
-(16, 'Margherita', 'The classic: San Marzano tomatoes, fresh mozzarella, basil, and extra virgin olive oil.', 9.00, 5),
-(17, 'Diavola', 'A spicy favorite with San Marzano tomatoes, mozzarella, and spicy salami.', 11.00, 5),
-(18, 'Quattro Formaggi', 'A rich blend of four cheeses: mozzarella, gorgonzola, Parmigiano, and Pecorino.', 12.00, 5),
-(19, 'Capricciosa', 'A feast of toppings including tomatoes, mozzarella, ham, mushrooms, artichokes, and olives.', 13.00, 5),
-(20, 'Gorgonzola, Speck e Noci', 'White pizza with mozzarella, gorgonzola cheese, smoked speck, and walnuts.', 14.00, 5),
-(21, 'Napoli', 'A taste of Naples with San Marzano tomatoes, mozzarella, anchovies, and oregano.', 10.00, 5);
+INSERT INTO offerings (offering_id, name, description, price, category_id, quantity, recommended) VALUES
+(16, 'Margherita', 'The classic: San Marzano tomatoes, fresh mozzarella, basil, and extra virgin olive oil.', 9.00, 5, 100, FALSE),
+(17, 'Diavola', 'A spicy favorite with San Marzano tomatoes, mozzarella, and spicy salami.', 11.00, 5, 100, FALSE),
+(18, 'Quattro Formaggi', 'A rich blend of four cheeses: mozzarella, gorgonzola, Parmigiano, and Pecorino.', 12.00, 5, 100, FALSE),
+(19, 'Capricciosa', 'A feast of toppings including tomatoes, mozzarella, ham, mushrooms, artichokes, and olives.', 13.00, 5, 100, TRUE),
+(20, 'Gorgonzola, Speck e Noci', 'White pizza with mozzarella, gorgonzola cheese, smoked speck, and walnuts.', 14.00, 5, 100, FALSE),
+(21, 'Napoli', 'A taste of Naples with San Marzano tomatoes, mozzarella, anchovies, and oregano.', 10.00, 5, 100, FALSE);
 
 INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALUES
 -- Margherita
@@ -205,10 +204,10 @@ INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALU
 
 -- 3F. DOLCI (Category ID: 6)
 -- -----------------------------------------------------------------
-INSERT INTO offerings (offering_id, name, description, price, category_id) VALUES
-(22, 'Tiramisù', 'The classic Italian dessert with layers of coffee-soaked ladyfingers and creamy mascarpone.', 7.00, 6),
-(23, 'Panna Cotta', 'A silky smooth cooked cream dessert, served with a seasonal berry coulis.', 6.00, 6),
-(24, 'Cannoli Siciliani', 'Crispy pastry tubes filled with a sweet, creamy ricotta and pistachio filling.', 8.00, 6);
+INSERT INTO offerings (offering_id, name, description, price, category_id, quantity, recommended) VALUES
+(22, 'Tiramisù', 'The classic Italian dessert with layers of coffee-soaked ladyfingers and creamy mascarpone.', 7.00, 6, 100, TRUE),
+(23, 'Panna Cotta', 'A silky smooth cooked cream dessert, served with a seasonal berry coulis.', 6.00, 6, 100, FALSE),
+(24, 'Cannoli Siciliani', 'Crispy pastry tubes filled with a sweet, creamy ricotta and pistachio filling.', 8.00, 6, 100, FALSE);
 
 INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALUES
 -- Tiramisù
@@ -221,47 +220,47 @@ INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALU
 
 -- 3G. DRINKS (Category IDs: 7-15)
 -- -----------------------------------------------------------------
-INSERT INTO offerings (offering_id, name, description, price, category_id) VALUES
+INSERT INTO offerings (offering_id, name, description, price, category_id, quantity, recommended) VALUES
 -- Acque Minerali (7)
-(25, 'Acqua Naturale 75cl', 'Still mineral water.', 3.00, 7),
-(26, 'Acqua Frizzante 75cl', 'Sparkling mineral water.', 3.00, 7),
+(25, 'Acqua Naturale 75cl', 'Still mineral water.', 3.00, 7, 100, FALSE),
+(26, 'Acqua Frizzante 75cl', 'Sparkling mineral water.', 3.00, 7, 100, FALSE),
 -- Bevande Analcoliche (8)
-(27, 'Coca-Cola', 'Classic Coca-Cola.', 3.50, 8),
-(28, 'Coca-Cola Zero', 'Zero sugar Coca-Cola.', 3.50, 8),
-(29, 'Aranciata', 'Italian orange soda.', 3.50, 8),
-(30, 'Limonata', 'Italian lemon soda.', 3.50, 8),
-(31, 'Tè alla Pesca', 'Peach iced tea.', 3.50, 8),
-(32, 'Tè al Limone', 'Lemon iced tea.', 3.50, 8),
+(27, 'Coca-Cola', 'Classic Coca-Cola.', 3.50, 8, 100, FALSE),
+(28, 'Coca-Cola Zero', 'Zero sugar Coca-Cola.', 3.50, 8, 100, FALSE),
+(29, 'Aranciata', 'Italian orange soda.', 3.50, 8, 150, TRUE),
+(30, 'Limonata', 'Italian lemon soda.', 3.50, 8, 100, FALSE),
+(31, 'Tè alla Pesca', 'Peach iced tea.', 3.50, 8, 100, FALSE),
+(32, 'Tè al Limone', 'Lemon iced tea.', 3.50, 8, 100, FALSE),
 -- Birre (9)
-(33, 'Peroni Nastro Azzurro', 'Classic Italian lager, 33cl bottle.', 5.00, 9),
-(34, 'Moretti', 'A quality beer made in the traditional way, 33cl bottle.', 5.00, 9),
-(35, 'Ichnusa Non Filtrata', 'Unfiltered Sardinian lager, 33cl bottle.', 6.00, 9),
+(33, 'Peroni Nastro Azzurro', 'Classic Italian lager, 33cl bottle.', 5.00, 9, 100, FALSE),
+(34, 'Moretti', 'A quality beer made in the traditional way, 33cl bottle.', 5.00, 9, 100, FALSE),
+(35, 'Ichnusa Non Filtrata', 'Unfiltered Sardinian lager, 33cl bottle.', 6.00, 9, 100, FALSE),
 -- Aperitivi (10)
-(36, 'Aperol Spritz', 'Aperol, Prosecco, and a splash of soda.', 8.00, 10),
-(37, 'Campari Spritz', 'Campari, Prosecco, and a splash of soda.', 8.00, 10),
-(38, 'Negroni', 'A perfect balance of Campari, sweet vermouth, and gin.', 9.00, 10),
+(36, 'Aperol Spritz', 'Aperol, Prosecco, and a splash of soda.', 8.00, 10, 100, FALSE),
+(37, 'Campari Spritz', 'Campari, Prosecco, and a splash of soda.', 8.00, 10, 100, FALSE),
+(38, 'Negroni', 'A perfect balance of Campari, sweet vermouth, and gin.', 9.00, 10, 100, FALSE),
 -- Vini Bianchi (11) - Bottle
-(39, 'Pinot Grigio', 'Dry and crisp white wine from Veneto.', 22.00, 11),
-(40, 'Chardonnay', 'Fruity and full-bodied white wine from Trentino.', 25.00, 11),
-(41, 'Sauvignon Blanc', 'Aromatic white wine from Friuli.', 28.00, 11),
+(39, 'Pinot Grigio', 'Dry and crisp white wine from Veneto.', 22.00, 11, 150, TRUE),
+(40, 'Chardonnay', 'Fruity and full-bodied white wine from Trentino.', 25.00, 11, 100, FALSE),
+(41, 'Sauvignon Blanc', 'Aromatic white wine from Friuli.', 28.00, 11, 100, FALSE),
 -- Vini Rossi (12) - Bottle
-(42, 'Chianti Classico', 'Classic Tuscan red, robust and fruity.', 26.00, 12),
-(43, 'Barbera d''Asti', 'Medium-bodied red from Piedmont.', 24.00, 12),
-(44, 'Nero d''Avola', 'Full-bodied and spicy red from Sicily.', 28.00, 12),
+(42, 'Chianti Classico', 'Classic Tuscan red, robust and fruity.', 26.00, 12, 100, FALSE),
+(43, 'Barbera d''Asti', 'Medium-bodied red from Piedmont.', 24.00, 12, 100, FALSE),
+(44, 'Nero d''Avola', 'Full-bodied and spicy red from Sicily.', 28.00, 12, 100, FALSE),
 -- Spumanti (13) - Bottle
-(45, 'Prosecco DOC Treviso', 'Extra dry sparkling wine, perfect for celebrating.', 25.00, 13),
+(45, 'Prosecco DOC Treviso', 'Extra dry sparkling wine, perfect for celebrating.', 25.00, 13, 100, FALSE),
 -- Caffetteria (14)
-(46, 'Espresso', 'A single shot of rich Italian coffee.', 1.50, 14),
-(47, 'Espresso Macchiato', 'Espresso "stained" with a drop of frothy milk.', 1.80, 14),
-(48, 'Cappuccino', 'Espresso with steamed milk foam.', 2.50, 14),
-(49, 'Caffè Latte', 'Espresso with a larger amount of steamed milk.', 3.00, 14),
-(50, 'Caffè Corretto', 'Espresso "corrected" with a shot of grappa or sambuca.', 3.50, 14),
+(46, 'Espresso', 'A single shot of rich Italian coffee.', 1.50, 14, 100, FALSE),
+(47, 'Espresso Macchiato', 'Espresso "stained" with a drop of frothy milk.', 1.80, 14, 100, FALSE),
+(48, 'Cappuccino', 'Espresso with steamed milk foam.', 2.50, 14, 100, FALSE),
+(49, 'Caffè Latte', 'Espresso with a larger amount of steamed milk.', 3.00, 14, 100, FALSE),
+(50, 'Caffè Corretto', 'Espresso "corrected" with a shot of grappa or sambuca.', 3.50, 14, 100, FALSE),
 -- Digestivi e Amari (15)
-(51, 'Limoncello', 'Sweet and fragrant lemon liqueur from Southern Italy.', 5.00, 15),
-(52, 'Grappa', 'Fragrant, grape-based pomace brandy.', 6.00, 15),
-(53, 'Amaro Montenegro', 'A classic bittersweet liqueur with notes of orange peel and vanilla.', 5.00, 15),
-(54, 'Fernet-Branca', 'Aromatic and intensely bitter herbal liqueur.', 5.00, 15),
-(55, 'Cynar', 'An artichoke-based bittersweet liqueur.', 5.00, 15);
+(51, 'Limoncello', 'Sweet and fragrant lemon liqueur from Southern Italy.', 5.00, 15, 100, FALSE),
+(52, 'Grappa', 'Fragrant, grape-based pomace brandy.', 6.00, 15, 100, FALSE),
+(53, 'Amaro Montenegro', 'A classic bittersweet liqueur with notes of orange peel and vanilla.', 5.00, 15, 100, FALSE),
+(54, 'Fernet-Branca', 'Aromatic and intensely bitter herbal liqueur.', 5.00, 15, 100, FALSE),
+(55, 'Cynar', 'An artichoke-based bittersweet liqueur.', 5.00, 15, 100, FALSE);
 
 INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALUES
 -- Water
