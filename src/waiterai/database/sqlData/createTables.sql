@@ -83,3 +83,10 @@ CREATE TABLE order_item_modifications (
     FOREIGN KEY (order_item_id) REFERENCES order_items(order_item_id) ON DELETE CASCADE,
     FOREIGN KEY (ingredient_id_to_remove) REFERENCES ingredients(ingredient_id) ON DELETE RESTRICT
 );
+
+
+
+CREATE TABLE faq (
+    `key` VARCHAR(100) NOT NULL PRIMARY KEY,
+    `value` TEXT NOT NULL
+);

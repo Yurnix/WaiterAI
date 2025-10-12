@@ -92,3 +92,9 @@ class OrderItemModification(Base):
 
     order_item = relationship("OrderItem", back_populates="modifications")
     ingredient_to_remove = relationship("Ingredient", back_populates="modifications")
+
+
+class FAQ(Base):
+    __tablename__ = 'faq'
+    key = Column(String(255), primary_key=True, nullable=False)
+    value = Column(Text, nullable=False)
