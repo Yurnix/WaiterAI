@@ -11,6 +11,7 @@ TRUNCATE TABLE offerings;
 TRUNCATE TABLE ingredients;
 TRUNCATE TABLE attributes;
 TRUNCATE TABLE menu_categories;
+TRUNCATE TABLE faq;
 
 -- 3. Re-enable Foreign Key Checks
 -- Always re-enable checks to maintain data integrity for future operations.
@@ -282,3 +283,46 @@ INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALU
 (49, 84, FALSE), (49, 85, FALSE), (50, 84, FALSE), (50, 87, FALSE),
 -- Digestivi
 (51, 86, FALSE), (52, 87, FALSE), (53, 88, FALSE), (54, 89, FALSE), (55, 90, FALSE);
+
+
+
+INSERT INTO FAQ (`key`, `value`) VALUES
+('working_hours', 'We are open Monday to Sunday, from 11:00 AM to 1:00 AM.'),
+('location', 'You can find us at 123 Pasta Lane, Rome, Italy. Buon appetito!'),
+('phone_number', 'Feel free to call us at +39 012 345 6789 for any inquiries or reservations.'),
+('email', 'You can reach us via email at ciao@ourrestaurant.it.'),
+('website', 'Visit our website at www.ourrestaurant.it for our full menu and online reservations.'),
+('make_reservation', 'You can book a table through our website, by calling us at +39 012 345 6789, or directly through this chat!'),
+('cancel_reservation', 'To cancel a reservation, please call us at least 3 hours in advance.'),
+('private_dining', 'Yes, we have a private room that can accommodate up to 20 guests. Please email us at events@ourrestaurant.it for details.'),
+('walk_ins', 'Walk-ins are always welcome! However, we recommend making a reservation, especially on weekends, to avoid disappointment.'),
+('menu_link', 'You can view our full menu here: www.ourrestaurant.it/menu'),
+('kids_menu', 'No dedicated kids menu.'),
+('nut_allergy', 'Our kitchen handles nuts. Please inform your server of any allergies so we can take extra precautions.'),
+('dairy_allergy', 'We can prepare many dishes without dairy. Please speak to your server for recommendations.'),
+('takeaway', 'We don''t provide takeaway service.'),
+('delivery_services', 'We don''t provide delivery service.'),
+('parking', 'There is paid street parking available nearby and a public parking garage two blocks away.'),
+('wifi', 'Yes, we offer complimentary Wi-Fi for our guests. The password is "mangiamangia".'),
+('accessibility', 'Our restaurant is fully wheelchair accessible, including our restrooms.'),
+('payment_methods', 'We accept cash, Visa, MasterCard, and American Express.'),
+('credit_cards_accepted', 'We accept all major credit cards, including Visa, MasterCard, and American Express.'),
+('gift_cards', 'Yes, gift cards are available for purchase at the restaurant. They make a perfect gift!'),
+('happy_hour', 'Join us for Aperitivo Hour from 4:00 PM to 6:00 PM on weekdays for special prices on drinks and appetizers.'),
+('live_music', 'We have live acoustic music every Friday and Saturday evening from 8:00 PM.'),
+('special_events', 'Follow us on our social media channels to stay updated on special events like wine tasting nights and holiday menus.'),
+('birthday_offer', 'Celebrating a birthday? Let us know when you book, and we''ll treat the birthday person to a complimentary dessert!'),
+('anniversary_package', 'We can help make your anniversary special with a complimentary glass of prosecco. Please mention the occasion when you book.'),
+('about_us', 'We are a family-owned restaurant dedicated to serving authentic Italian cuisine made with love and the freshest ingredients.'),
+('chef_name', 'Our kitchen is led by the talented Chef Giovanni Rossi, who brings recipes from his hometown of Naples.'),
+('restaurant_story', 'Our family opened this restaurant in 1995 with a dream of sharing our nonna''s recipes with the community.'),
+('dress_code', 'Our dress code is smart casual. We want you to be comfortable!'),
+('pet_policy', 'We welcome well-behaved dogs on our outdoor patio area.'),
+('corkage_fee', 'We have a curated wine list, but if you wish to bring your own bottle, our corkage fee is €15.'),
+('cake_policy', 'You are welcome to bring your own celebration cake.'),
+('lost_and_found', 'If you believe you''ve left something behind, please call us at +39 012 345 6789 and we will check for you.'),
+('greeting', 'Ciao! Welcome to our restaurant. How can I help you today?'),
+('help', 'You can ask me about our hours, menu, reservations, or location. Just type your question!'),
+('human_agent', 'If you need to speak with a person, please call the restaurant directly at +39 012 345 6789.'),
+('thank_you', 'You are most welcome! Is there anything else I can help you with?'),
+('goodbye', 'Grazie and arriveci! We hope to see you soon.');

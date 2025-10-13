@@ -1,6 +1,6 @@
 from sqlalchemy.orm import joinedload, selectinload
 from .connection import get_session
-from .models import Base, MenuCategory, Offering, Ingredient, Attribute, OfferingIngredient, OrderItem, OrderItemModification
+from .models import Base, MenuCategory, Offering, Ingredient, Attribute, OfferingIngredient, OrderItem, OrderItemModification, faq
 from contextlib import contextmanager
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, selectinload, joinedload
@@ -355,3 +355,21 @@ def payment(order_id: int, item_names: list[str] = None) -> str:
             return f"Payment successful. {count} item(s) marked as paid."
         else:
             return "All specified items were already paid."
+        
+
+def get_all_keys(session):
+    #Retrieves all keys from the FAQ table. Returns a list of all key strings.
+    with get_session() as session:
+        session.query(faq.keys)
+        keys_query = session.query(faq.key).all()
+        return [key for key, in keys_query]
+
+
+def get_value_for_key(session, key_to_find: str) -> str:
+    #Retrieves the value for a specific key from the FAQ table.
+    with get_session() as session:
+        # Query for the first FAQ object that matches the key
+        result = session.query(faq).filter_by(key=key_to_find).first()
+        if result:
+            return result.value
+        return None
