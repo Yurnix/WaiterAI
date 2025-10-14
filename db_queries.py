@@ -1,6 +1,6 @@
 from sqlalchemy.orm import joinedload, selectinload
-from .connection import get_session
-from .models import Base, MenuCategory, Offering, Ingredient, Attribute, OfferingIngredient, OrderItem, OrderItemModification, faq
+from db_connection import get_session
+from db_models import Base, MenuCategory, Offering, Ingredient, Attribute, OfferingIngredient, OrderItem, OrderItemModification, faq
 from contextlib import contextmanager
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, selectinload, joinedload

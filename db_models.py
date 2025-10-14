@@ -4,7 +4,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import (relationship, DeclarativeBase)
 from sqlalchemy.sql import func
-from .connection import Base
+from db_connection import Base
 
 
 
