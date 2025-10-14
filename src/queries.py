@@ -360,7 +360,7 @@ def payment(order_id: int, item_names: list[str] = None) -> str:
 def get_all_keys(session):
     #Retrieves all keys from the FAQ table. Returns a list of all key strings.
     with get_session() as session:
-        session.query(faq.keys)
+        session.query(faq.key)
         keys_query = session.query(faq.key).all()
         return [key for key, in keys_query]
 
