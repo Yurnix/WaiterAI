@@ -5,8 +5,6 @@ This script provides a terminal-based interface to chat with the AI assistant.
 import os
 from dotenv import load_dotenv
 from anthropic_llm import AnthropicLLM
-from order_component import OrderComponent
-from menu_component import MenuComponent
 from anthropic.types import MessageParam
 from typing import List
 
@@ -80,17 +78,10 @@ def main():
         print("ERROR: ANTHROPIC_API_KEY not found in .env file")
         return
     
-    # Initialize components (Dependency Injection)
-    print("Initializing components...")
-    order_component = OrderComponent()
-    menu_component = MenuComponent()
-    
     # Initialize LLM
     print("Initializing Anthropic LLM...")
     llm = AnthropicLLM(
-        api_key=api_key,
-        order_component=order_component,
-        menu_component=menu_component
+        api_key=api_key
     )
     
     print("✓ Initialization complete!\n")
