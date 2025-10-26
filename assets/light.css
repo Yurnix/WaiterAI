@@ -1,0 +1,115 @@
+/* Theme injector (LIGHT) with BaseWeb control overrides */
+:root{
+    --rosso:#b2001d; --vino:#7a0014; --olio:#3b6b3e;
+    --panna:#f7f3ea; --ink:#1a1a1a; --muted:#585858; --ring:#e4dbcc; --card:#ffffff;
+    --input-bg:#ffffff; --input-text:#111; --input-border:#d7cfc2; --input-focus:#b2001d33;
+    --tab-unselected:#6a6a6a;
+  }
+  .stApp{
+    background: var(--panna);
+    color: var(--ink);
+    font-family: "Lato", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  }
+
+  /* Tabs */
+  div[data-baseweb="tab-list"] button{ font-weight:700; letter-spacing:.2px; color: var(--tab-unselected); }
+  div[role="tab"][aria-selected="true"]{ color:var(--rosso); border-bottom:3px solid var(--rosso); }
+
+  /* Cards */
+  .card{ background:var(--card); border:1px solid var(--ring); border-radius:18px; padding:16px; box-shadow:0 1px 0 rgba(0,0,0,.02); }
+  .menu-card .title{ font-family:"Playfair Display", serif; font-size:18px; font-weight:700; margin-bottom:6px; color:#121212; }
+  .menu-card .desc{ color:#404040; font-size:15px; line-height:1.45; }
+  .menu-card .price{ display:inline-block; margin-top:10px; font-weight:800; padding:6px 10px; border-radius:999px; background:#fff4f6; color:var(--vino); border:1px solid #ffd8df; }
+  .menu-card { margin-bottom:18px; }
+
+  /* Neutral inputs (Streamlit widgets) */
+  .stTextInput input, .stNumberInput input, .stTextArea textarea{
+    background:#fff !important; color:var(--input-text) !important;
+    border:1.5px solid var(--input-border) !important; border-radius:12px !important;
+  }
+  .stTextInput input::placeholder, .stTextArea textarea::placeholder{ color:#888 !important; }
+  .stCheckbox input[type="checkbox"] { accent-color: var(--rosso) !important; }
+
+  /* BaseWeb Select — LIGHT */
+  .stSelectbox [data-baseweb="select"]{
+    background: var(--input-bg) !important;
+    border: 1.5px solid var(--input-border) !important;
+    border-radius: 12px !important;
+    color: var(--input-text) !important;
+  }
+  .stSelectbox [data-baseweb="select"] > div,
+  .stSelectbox [data-baseweb="select"] input,
+  .stSelectbox [data-baseweb="select"] svg{
+    background: transparent !important; color: var(--input-text) !important; fill: var(--input-text) !important;
+  }
+  .stSelectbox [data-baseweb="popover"] > div,
+  .stSelectbox [data-baseweb="menu"]{
+    background: #fff !important; color: #111 !important;
+    border: 1px solid var(--input-border) !important; border-radius: 12px !important;
+  }
+  .stSelectbox [data-baseweb="menu"] div[role="option"]{ background:#fff !important; color:#111 !important; }
+  .stSelectbox [data-baseweb="menu"] div[role="option"][aria-selected="true"],
+  .stSelectbox [data-baseweb="menu"] div[role="option"]:hover{ background:#f2f2f2 !important; color:#111 !important; }
+
+  /* BaseWeb MultiSelect — LIGHT */
+  .stMultiSelect [data-baseweb="select"]{
+    background: var(--input-bg) !important;
+    border: 1.5px solid var(--input-border) !important;
+    border-radius: 12px !important;
+    color: var(--input-text) !important;
+  }
+  .stMultiSelect [data-baseweb="select"] > div,
+  .stMultiSelect [data-baseweb="select"] input,
+  .stMultiSelect [data-baseweb="select"] svg{
+    background: transparent !important; color: var(--input-text) !important; fill: var(--input-text) !important;
+  }
+  .stMultiSelect [data-baseweb="popover"] > div,
+  .stMultiSelect [data-baseweb="menu"]{
+    background: #fff !important; color: #111 !important;
+    border: 1px solid var(--input-border) !important; border-radius: 12px !important;
+  }
+  .stMultiSelect [data-baseweb="menu"] div[role="option"]{ background:#fff !important; color:#111 !important; }
+  .stMultiSelect [data-baseweb="menu"] div[role="option"][aria-selected="true"],
+  .stMultiSelect [data-baseweb="menu"] div[role="option"]:hover{ background:#f2f2f2 !important; color:#111 !important; }
+  .stMultiSelect [data-baseweb="tag"]{ background:#f3f3f3 !important; color:#111 !important; border:1px solid var(--input-border) !important; }
+  .stMultiSelect [data-baseweb="tag"] svg{ fill:#111 !important; color:#111 !important; }
+
+  /* Chat input */
+  div[data-testid="stChatInput"] > div{
+    background: var(--input-bg) !important; border: 2px solid var(--input-border) !important;
+    border-radius: 18px !important; box-shadow: 0 2px 0 rgba(0,0,0,.04);
+  }
+  div[data-testid="stChatInput"] textarea{ color: var(--input-text) !important; background: var(--input-bg) !important; font-weight:600 !important; }
+  div[data-testid="stChatInput"] > div:focus-within{ box-shadow: 0 0 0 4px var(--input-focus) !important; border-color: var(--rosso) !important; }
+  div[data-testid="stChatInput"] button{ background: var(--rosso) !important; color:#fff !important; border-radius:12px !important; border:none !important; }
+
+  /* Sticky Tabs: keep the tab bar visible when scrolling */
+  .stTabs,
+  .stTabs [data-baseweb="tab-list"]{
+    position: sticky;
+    top: 0;                     
+    z-index: 1000;             
+    background: var(--panna);   
+    padding: 6px 0;       
+    box-shadow: 0 2px 6px rgba(0,0,0,.06); 
+  }
+
+  
+  /* Chat content contrast */
+  .stChatMessage .stMarkdown p, .stChatMessage .stMarkdown li { color:#101010 !important; }
+  .stChatMessage [data-testid="stMarkdownContainer"] a{ color:var(--vino) !important; text-decoration:underline; }
+
+  /* Prevent widget artifacts inside the pure HTML grid */
+  .menu-grid{ margin-top:6px; }
+  .menu-grid [data-testid="stWidget"], .menu-grid .stTextInput, .menu-grid .stNumberInput,
+  .menu-grid .stTextArea, .menu-grid .stSelectbox, .menu-grid .stMultiSelect,
+  .menu-grid div[data-testid="stTextInputRoot"], .menu-grid div[data-testid="stNumberInput"]{ display:none !important; }
+
+  /* Grid for pure HTML menu cards */
+  .menu-grid2{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:16px; margin-top:6px; }
+  .menu-grid2 .menu-card{ background:var(--card); border:1px solid var(--ring); border-radius:18px; padding:16px; box-shadow:0 1px 0 rgba(0,0,0,.02); }
+  .menu-grid2 .menu-card .title{ font-family:"Playfair Display", serif; font-size:18px; font-weight:700; margin-bottom:6px; color: var(--ink); }
+  .menu-grid2 .menu-card .desc{ color:#404040; font-size:15px; line-height:1.45; }
+  .menu-grid2 .menu-card .price{ display:inline-block; margin-top:10px; font-weight:800; padding:6px 10px; border-radius:999px; background:#fff4f6; color:var(--vino); border:1px solid #ffd8df; }
+
+  div[data-testid="stMetricValue"]{ font-weight:800; }

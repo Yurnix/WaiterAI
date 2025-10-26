@@ -313,25 +313,39 @@ def update_order_item_quantity(order_item_id: int, new_quantity: int) -> str:
             )
 
 
-def receipt(order_id: int, item_names: list[str] = None) -> dict:
+def receipt(order_id: int, item_names: list[str] = None,
+            include_paid: bool = False, include_status: bool = False) -> dict:
     with get_session() as session:
         query = session.query(OrderItem).options(
             joinedload(OrderItem.offering)
         ).filter(OrderItem.order_id == order_id)
-        
+
         if item_names:
             query = query.join(Offering).filter(Offering.name.in_(item_names))
-            
+
+        if not include_paid:
+            query = query.filter(OrderItem.order_status != 'paid')
+
         order_items = query.all()
-        
-        receipt_items = [
-            {"item name": item.offering.name, "item value": float(item.offering.price)}
-            for item in order_items
-        ]
-        
+
+        if include_status:
+            receipt_items = [
+                {
+                    "item name": item.offering.name,
+                    "item value": float(item.offering.price),
+                    "status": item.order_status
+                }
+                for item in order_items
+            ]
+        else:
+            receipt_items = [
+                {"item name": item.offering.name, "item value": float(item.offering.price)}
+                for item in order_items
+            ]
+
         total = sum(item.offering.price for item in order_items)
-        
         return {"items": receipt_items, "total": float(total)}
+
 
 def payment(order_id: int, item_names: list[str] = None) -> str:
     with get_session() as session:
