@@ -4,7 +4,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import (relationship, DeclarativeBase)
 from sqlalchemy.sql import func
-from connection import Base
+from .connection import Base
 
 
 
@@ -77,7 +77,18 @@ class OrderItem(Base):
     order_id = Column(Integer, nullable=False, index=True)
     offering_id = Column(Integer, ForeignKey('offerings.offering_id'), nullable=False)
     special_instructions = Column(Text)
-    order_status = Column(Enum('pending', 'preparing', 'served', 'paid', 'cancelled'), server_default='pending')
+    order_status = Column(
+        Enum(
+            'pending',
+            'preparing',
+            'served',
+            'paid',
+            'cancelled',
+            'paid-completed',
+            'cancelled-completed'
+        ),
+        server_default='pending'
+    )
     sys_creation_date = Column(TIMESTAMP, server_default=func.now())
     sys_update_date = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
     quantity = Column(Integer, nullable=False, default=1)

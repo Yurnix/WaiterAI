@@ -8,6 +8,7 @@ STR = {
         "menu_header": "Μενού",
         "cart_header": "Καλάθι",
         "customer": "Όνομα πελάτη", "order_id": "Order ID",
+        "table": "Τραπέζι",
         "type": "Τύπος", "all": "Όλα", "foods": "Φαγητά", "drinks": "Ποτά",
         "categories": "Κατηγορίες",
         "min_price": "Ελάχιστη τιμή (€)", "max_price": "Μέγιστη τιμή (€)",
@@ -17,7 +18,8 @@ STR = {
         "items": "Τεμάχια", "total": "Σύνολο (€)",
         "language": "Γλώσσα", "theme": "Θέμα", "light": "Φωτεινό", "dark": "Σκοτεινό",
         "settings_header": "Ρυθμίσεις", "llm_missing": "Λείπει ANTHROPIC_API_KEY στο περιβάλλον.",
-        "context_badge": "Παραγγελία"
+        "context_badge": "Παραγγελία",
+        "chat_placeholder": "Γράψτε εδώ για να συνομιλήσετε με το σερβιτόρο μας..."
     },
     "en": {
         "chat": "Chat", "menu": "Menu", "cart": "Cart", "settings": "Settings",
@@ -25,6 +27,7 @@ STR = {
         "menu_header": "Menu",
         "cart_header": "Cart",
         "customer": "Customer name", "order_id": "Order ID",
+        "table": "Table",
         "type": "Type", "all": "All", "foods": "Foods", "drinks": "Drinks",
         "categories": "Categories",
         "min_price": "Min price (€)", "max_price": "Max price (€)",
@@ -34,6 +37,7 @@ STR = {
         "items": "Items", "total": "Total (€)",
         "language": "Language", "theme": "Theme", "light": "Light", "dark": "Dark",
         "settings_header": "Settings", "llm_missing": "ANTHROPIC_API_KEY is missing.",
-        "context_badge": "Order"
+        "context_badge": "Order",
+        "chat_placeholder": "Type here to chat with our waiter..."
     }
 }

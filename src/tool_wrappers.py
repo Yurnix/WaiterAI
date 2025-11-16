@@ -3,7 +3,7 @@ Tool wrappers for LLM integration with database queries.
 These wrappers convert dict parameters from the LLM into function arguments for queries.py.
 """
 from typing import Dict, Any, List
-import queries
+from . import queries
 
 
 def wrap_get_categories(params: Dict[str, Any]) -> Dict:
@@ -60,7 +60,9 @@ def wrap_receipt(params: Dict[str, Any]) -> Dict:
     """Wrapper for queries.receipt function."""
     return queries.receipt(
         order_id=params['order_id'],
-        item_names=params.get('item_names')
+        item_names=params.get('item_names'),
+        include_paid=params.get('include_paid', False),
+        include_status=params.get('include_status', True)
     )
 
 

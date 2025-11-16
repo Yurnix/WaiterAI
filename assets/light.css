@@ -5,10 +5,54 @@
     --input-bg:#ffffff; --input-text:#111; --input-border:#d7cfc2; --input-focus:#b2001d33;
     --tab-unselected:#6a6a6a;
   }
+  
+  /* Viewport height control */
+  html, body, [data-testid="stAppViewContainer"], .stApp {
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+  
   .stApp{
-    background: var(--panna);
-    color: var(--ink);
+    background: #f5f5f5 !important;
+    color: #000000 !important;
     font-family: "Lato", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  }
+  
+  /* All text should be black */
+  .stApp * {
+    color: #000000 !important;
+  }
+  
+  /* Compact header */
+  .stApp > header {
+    padding: 0.5rem 1rem !important;
+  }
+  
+  .compact-header {
+    margin-bottom: 0.5rem;
+  }
+  
+  .compact-header .stImage {
+    margin-bottom: 0 !important;
+  }
+  
+  .compact-header [data-testid="column"] {
+    padding: 0.25rem !important;
+  }
+  
+  /* Reduce spacing in main content */
+  .main .block-container {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+  }
+  
+  /* Make tabs container scrollable */
+  section[data-testid="stVerticalBlock"] > div {
+    height: 100%;
+    overflow: hidden;
   }
 
   /* Tabs */
@@ -79,9 +123,20 @@
     background: var(--input-bg) !important; border: 2px solid var(--input-border) !important;
     border-radius: 18px !important; box-shadow: 0 2px 0 rgba(0,0,0,.04);
   }
-  div[data-testid="stChatInput"] textarea{ color: var(--input-text) !important; background: var(--input-bg) !important; font-weight:600 !important; }
+  div[data-testid="stChatInput"] textarea{ 
+    color: var(--input-text) !important; 
+    background: var(--input-bg) !important; 
+    font-weight:600 !important; 
+  }
+  div[data-testid="stChatInput"] textarea::placeholder {
+    color: var(--muted) !important;
+    opacity: 0.7 !important;
+  }
+  div[data-testid="stChatInput"] textarea:focus::placeholder {
+    opacity: 0 !important;
+  }
   div[data-testid="stChatInput"] > div:focus-within{ box-shadow: 0 0 0 4px var(--input-focus) !important; border-color: var(--rosso) !important; }
-  div[data-testid="stChatInput"] button{ background: var(--rosso) !important; color:#fff !important; border-radius:12px !important; border:none !important; }
+  div[data-testid="stChatInput"] button{ background: #81c9fa !important; color:#fff !important; border-radius:12px !important; border:none !important; }
 
   /* Sticky Tabs: keep the tab bar visible when scrolling */
   .stTabs,
@@ -89,15 +144,127 @@
     position: sticky;
     top: 0;                     
     z-index: 1000;             
-    background: var(--panna);   
+    background: #f5f5f5 !important;   
     padding: 6px 0;       
     box-shadow: 0 2px 6px rgba(0,0,0,.06); 
   }
+  
+  /* Tab content area should be light grey except chat container */
+  .stTabs [data-baseweb="tab-panel"] {
+    background: #f5f5f5 !important;
+  }
 
   
-  /* Chat content contrast */
-  .stChatMessage .stMarkdown p, .stChatMessage .stMarkdown li { color:#101010 !important; }
-  .stChatMessage [data-testid="stMarkdownContainer"] a{ color:var(--vino) !important; text-decoration:underline; }
+/* Chat area layout */
+.chat-shell {
+  background: #ffffff;
+  border: 1px solid #dedede;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.04);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-scroll {
+  background: #ffffff;
+  min-height: 450px;
+  max-height: 450px;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+
+.chat-row {
+  display: flex;
+}
+
+.chat-row-user {
+  justify-content: flex-end;
+}
+
+.chat-row-assistant {
+  justify-content: flex-start;
+}
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 12px 16px;
+  border-radius: 18px;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  background: #f0f0f0;
+  border: 1px solid transparent;
+  color: #1a1a1a;
+}
+
+.chat-bubble-user {
+  background: #ffcccb;
+  border: 1px solid #ff9999;
+  border-radius: 18px 18px 4px 18px;
+  color: #5c1010;
+}
+
+.chat-bubble-assistant {
+  background: #c8e6c9;
+  border: 1px solid #a5d6a7;
+  border-radius: 18px 18px 18px 4px;
+  color: #1b5e20;
+}
+
+.chat-bubble a {
+  color: var(--vino);
+  text-decoration: underline;
+}
+
+.typing-bubble {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+  
+  /* Typing indicator animation */
+  @keyframes typingDot {
+    0%, 60%, 100% { 
+      transform: translateY(0);
+      opacity: 0.4;
+    }
+    30% { 
+      transform: translateY(-10px);
+      opacity: 1;
+    }
+  }
+  
+  .typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 0;
+  }
+  
+  .typing-indicator span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--muted);
+    display: inline-block;
+    animation: typingDot 1.4s infinite;
+  }
+  
+  .typing-indicator span:nth-child(1) {
+    animation-delay: 0s;
+  }
+  
+  .typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
 
   /* Prevent widget artifacts inside the pure HTML grid */
   .menu-grid{ margin-top:6px; }
@@ -113,3 +280,35 @@
   .menu-grid2 .menu-card .price{ display:inline-block; margin-top:10px; font-weight:800; padding:6px 10px; border-radius:999px; background:#fff4f6; color:var(--vino); border:1px solid #ffd8df; }
 
   div[data-testid="stMetricValue"]{ font-weight:800; }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .main .block-container {
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+    
+    .menu-grid2 {
+      grid-template-columns: 1fr !important;
+    }
+    
+    /* Reduce logo size on mobile */
+    .stApp img {
+      max-width: 150px !important;
+    }
+    
+    /* Stack columns on mobile */
+    div[data-testid="column"] {
+      min-width: 100% !important;
+    }
+  }
+  
+  /* Hide Streamlit footer and menu to save space */
+  footer {display: none !important;}
+  #MainMenu {visibility: hidden !important;}
+  header {visibility: visible !important;}
+  
+  /* Reduce chat input padding */
+  div[data-testid="stChatInput"] {
+    padding: 0.5rem 0 !important;
+  }

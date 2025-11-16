@@ -48,6 +48,32 @@ cd WaiterAI
 python test_chatbot.py
 ```
 
+### Run the UI on localhost (no Docker)
+
+1. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+1. Configure environment
+
+Create a `.env` file in the project root with:
+
+```env
+DATABASE_URL=mysql+pymysql://user:pass@127.0.0.1:3306/waiterai?charset=utf8mb4
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+```
+
+1. Start the app
+
+```bash
+python start_app.py           # Opens http://127.0.0.1:8501
+python start_app.py --port 8502
+```
+
+This launcher works on macOS, Windows, and Linux. The app binds to localhost by default.
+
 ### Test Commands
 
 - `quit` or `exit` - End the conversation
@@ -70,9 +96,11 @@ Assistant: [Uses place_order_item tool and confirms with order ID]
 You: Cancel order 1
 Assistant: [Uses cancel_order_item tool and confirms cancellation]
 ```
+
 ## Logging
 
 The application provides detailed logging for:
+
 - Tool executions (name, parameters, results)
 - LLM responses and stop reasons
 - User queries and final responses

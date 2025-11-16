@@ -6,7 +6,7 @@ import logging
 from typing import List, Dict, Any, Optional, Callable
 from anthropic import Anthropic
 from anthropic.types import ToolParam, MessageParam, TextBlock, ToolUseBlock
-import tool_wrappers
+from . import tool_wrappers
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
