@@ -131,12 +131,13 @@ def build_chat_context() -> str:
     try:
         receipt = queries.receipt(order_id=order_id, include_paid=True, include_status=True)
         items = receipt.get("items", [])
+        total_due = receipt.get("total_due", 0.0)
         if items:
             lines = [
                 f"  • order_item_id {entry['order_item_id']}: {entry['item name']} x{entry['quantity']} (status: {entry.get('status', 'pending')})"
                 for entry in items
             ]
-            order_summary = "Current order items:\n" + "\n".join(lines)
+            order_summary = f"Current order items:\n" + "\n".join(lines) + f"\nTotal due: €{total_due:.2f}"
     except Exception:
         # Silently ignore DB issues; the LLM will rely on tools instead
         pass
@@ -185,20 +186,25 @@ def render_cart_view():
         )
         items = rec.get("items", [])
         total = float(rec.get("total", 0.0))
+        total_due = float(rec.get("total_due", 0.0))
     except Exception as e:
         st.error(f"Σφάλμα φόρτωσης καλαθιού: {e}")
         return
 
-    c1, c2 = st.columns(2)
+    c1, c2, c3 = st.columns(3)
     with c1: st.metric(S["items"], len(items))
-    with c2: st.metric(S["total"], f"{total:.2f}")
+    with c2: st.metric(S["total"], f"€{total:.2f}")
+    with c3: st.metric("Total Due", f"€{total_due:.2f}")
 
     if not items:
         st.caption(S["not_found"])
     else:
         for it in items:
             status_info = f" ({it.get('status')})" if "status" in it else ""
-            st.write(f"- {it['item name']} — €{float(it['item value']):.2f}{status_info}")
+            quantity = it.get('quantity', 1)
+            unit_price = float(it['item value'])
+            line_total = unit_price * quantity
+            st.write(f"- {it['item name']} x{quantity} — €{unit_price:.2f} each (€{line_total:.2f} total){status_info}")
 
 # Tabs
 tab_chat, tab_menu, tab_cart, tab_settings = st.tabs(

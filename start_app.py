@@ -43,6 +43,15 @@ def main() -> int:
     if not os.getenv("ANTHROPIC_API_KEY"):
         print("[WARN] ANTHROPIC_API_KEY is not set. The chat will show a warning until you add it to .env.")
 
+    # Finalize previous orders by marking 'paid' as 'paid-completed'
+    try:
+        from src.queries import finalize_previous_orders
+        updated_count = finalize_previous_orders()
+        if updated_count > 0:
+            print(f"[INFO] Finalized {updated_count} order item(s) from previous session.")
+    except Exception as e:
+        print(f"[WARN] Could not finalize previous orders: {e}")
+
     # Ensure streamlit is available
     # Use module invocation via current Python to be cross-platform
     cmd = [sys.executable, "-m", "streamlit", "run", os.path.join(os.path.dirname(__file__), "app.py"),

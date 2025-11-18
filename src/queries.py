@@ -104,7 +104,7 @@ def getMenu(
 
 
 def finalize_previous_orders() -> int:
-    """Tag historical paid/cancelled items as completed variants."""
+    """Tag historical paid/cancelled/served/pending items as completed variants."""
     with get_session() as session:
         updated_paid = session.query(OrderItem).filter(
             OrderItem.order_status == 'paid'
@@ -117,7 +117,7 @@ def finalize_previous_orders() -> int:
         )
 
         updated_cancelled = session.query(OrderItem).filter(
-            OrderItem.order_status == 'cancelled'
+            OrderItem.order_status.in_(['cancelled', 'served', 'pending'])
         ).update(
             {
                 OrderItem.order_status: 'cancelled-completed',
@@ -237,11 +237,11 @@ def refresh_order_statuses(order_id: Optional[int] = None) -> int:
             reference_time = item.sys_update_date or item.sys_creation_date or now
             elapsed = now - reference_time
 
-            if item.order_status == 'pending' and elapsed >= timedelta(minutes=1):
+            if item.order_status == 'pending' and elapsed >= timedelta(minutes=2):
                 item.order_status = 'preparing'
                 item.sys_update_date = now
                 updated += 1
-            elif item.order_status == 'preparing' and elapsed >= timedelta(minutes=1):
+            elif item.order_status == 'preparing' and elapsed >= timedelta(minutes=2):
                 item.order_status = 'served'
                 item.sys_update_date = now
                 updated += 1
@@ -510,6 +510,8 @@ def receipt(order_id: int, item_names: list[str] = None,
         order_items = query.all()
 
         receipt_items = []
+        total = 0
+        total_due = 0
         for item in order_items:
             entry = {
                 "order_item_id": item.order_item_id,
@@ -520,14 +522,24 @@ def receipt(order_id: int, item_names: list[str] = None,
             if include_status:
                 entry["status"] = item.order_status
             receipt_items.append(entry)
+            
+            # Total includes: pending, served, preparing, paid (excludes cancelled and paid-completed)
+            if item.order_status in ['pending', 'served', 'preparing', 'paid']:
+                total += item.offering.price * item.quantity
+            
+            # Total due only includes unpaid items: pending, served, preparing
+            if item.order_status in ['pending', 'served', 'preparing']:
+                total_due += item.offering.price * item.quantity
 
-        total = sum(item.offering.price for item in order_items)
-        return {"items": receipt_items, "total": float(total)}
+        return {"items": receipt_items, "total": float(total), "total_due": float(total_due)}
 
 
 def payment(order_id: int, item_names: list[str] = None) -> str:
     with get_session() as session:
-        query = session.query(OrderItem).filter(OrderItem.order_id == order_id)
+        query = session.query(OrderItem).filter(
+            OrderItem.order_id == order_id,
+            OrderItem.order_status.in_(['served', 'preparing', 'pending'])
+        )
         
         if item_names:
             query = query.join(Offering).filter(Offering.name.in_(item_names))
@@ -535,13 +547,14 @@ def payment(order_id: int, item_names: list[str] = None) -> str:
         order_items_to_update = query.with_for_update().all()
         
         if not order_items_to_update:
-            return "No items found for the given criteria."
+            return "No unpaid items found for the given criteria."
             
         count = 0
         for item in order_items_to_update:
-            if item.order_status != 'paid':
-                item.order_status = 'paid'
-                count += 1
+            item.order_status = 'paid'
+            count += 1
+        
+        session.commit()
         
         if count > 0:
             return f"Payment successful. {count} item(s) marked as paid."

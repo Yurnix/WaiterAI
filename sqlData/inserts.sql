@@ -287,7 +287,7 @@ INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALU
 
 
 
-INSERT INTO FAQ (`key`, `value`) VALUES
+INSERT INTO faq (`key`, `value`) VALUES
 ('working_hours', 'We are open Monday to Sunday, from 11:00 AM to 1:00 AM.'),
 ('location', 'You can find us at 123 Pasta Lane, Rome, Italy. Buon appetito!'),
 ('phone_number', 'Feel free to call us at +39 012 345 6789 for any inquiries or reservations.'),
