@@ -6,7 +6,7 @@ import logging
 from typing import List, Dict, Any, Optional, Callable
 from anthropic import Anthropic
 from anthropic.types import ToolParam, MessageParam, TextBlock, ToolUseBlock
-import tool_wrappers
+from . import tool_wrappers
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -46,7 +46,17 @@ Always confirm orders with the customer and provide order IDs for reference.
 
 When customers ask about pricing, dietary restrictions, or want recommendations, use the get_menu 
 tool with appropriate filters. For specific allergen questions, use the get_allergens tool.
-For general questions about the restaurant, check the FAQ tools first."""
+For general questions about the restaurant, check the FAQ tools first.
+
+CRITICAL: You MUST actually use the tools to perform actions - never just say you did something without calling the tool:
+- To place an order, you MUST call the place_order tool
+- To process payment, you MUST call the process_payment tool
+- To cancel an item, you MUST call the cancel_order_item tool
+- To update quantity, you MUST call the update_order_item_quantity tool
+
+When a customer confirms payment (says "yes", "proceed", "ok", etc. after seeing the bill), 
+you MUST immediately call the process_payment tool with their order_id. Do not just say the payment 
+was processed - actually call the tool to mark the items as paid in the system."""
     
     def __init__(self, api_key: str, model: str = "claude-sonnet-4-5-20250929"):
         """

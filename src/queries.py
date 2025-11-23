@@ -1,12 +1,17 @@
 from sqlalchemy.orm import joinedload, selectinload
-from connection import get_session
-from models import Base, MenuCategory, Offering, Ingredient, Attribute, OfferingIngredient, OrderItem, OrderItemModification, faq
+from .connection import get_session
+from .models import Base, MenuCategory, Offering, Ingredient, Attribute, OfferingIngredient, OrderItem, OrderItemModification, faq
 from contextlib import contextmanager
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker, selectinload, joinedload
 from typing import Optional, List
+from datetime import datetime, timedelta
+import re
 
 
+def _normalize_ingredient_name(value: str) -> str:
+    """Case- and whitespace-normalized ingredient identifier."""
+    return re.sub(r"\s+", " ", value.strip().lower())
 
 
 def getCategories(is_food: bool = None) -> dict:
@@ -96,6 +101,155 @@ def getMenu(
             })
             
         return {"items": result_items}
+
+
+def finalize_previous_orders() -> int:
+    """Tag historical paid/cancelled/served/pending items as completed variants."""
+    with get_session() as session:
+        updated_paid = session.query(OrderItem).filter(
+            OrderItem.order_status == 'paid'
+        ).update(
+            {
+                OrderItem.order_status: 'paid-completed',
+                OrderItem.sys_update_date: func.now()
+            },
+            synchronize_session=False
+        )
+
+        updated_cancelled = session.query(OrderItem).filter(
+            OrderItem.order_status.in_(['cancelled', 'served', 'pending'])
+        ).update(
+            {
+                OrderItem.order_status: 'cancelled-completed',
+                OrderItem.sys_update_date: func.now()
+            },
+            synchronize_session=False
+        )
+
+        session.commit()
+        return (updated_paid or 0) + (updated_cancelled or 0)
+
+
+def _infer_removable_ingredients(offering: Offering, special_instructions: Optional[str]) -> List[str]:
+    """Derive removable ingredient names from natural-language instructions."""
+    if not special_instructions:
+        return []
+
+    text = special_instructions.lower()
+    # Collect phrases following common exclusion keywords
+    phrases: List[str] = []
+    for pattern in (r"without\s+([a-z\s,'-]+)", r"no\s+([a-z\s,'-]+)", r"hold\s+([a-z\s,'-]+)"):
+        for match in re.finditer(pattern, text):
+            fragment = match.group(1).strip()
+            if not fragment:
+                continue
+            # Truncate at conjunctions/punctuation to avoid trailing text
+            fragment = re.split(r"(?:\band\b|\bplease\b|\bwith\b|\bthanks\b|\.|,|!)", fragment)[0].strip()
+            if fragment:
+                phrases.append(fragment)
+
+    if not phrases:
+        return []
+
+    removals: List[str] = []
+    for assoc in offering.ingredients:
+        if not assoc.is_removable:
+            continue
+        ingredient_name = assoc.ingredient.name.lower()
+        ingredient_tokens = set(re.findall(r"[a-z']+", ingredient_name))
+        if not ingredient_tokens:
+            continue
+        for phrase in phrases:
+            phrase_tokens = set(re.findall(r"[a-z']+", phrase.lower()))
+            if not phrase_tokens:
+                continue
+            if ingredient_tokens & phrase_tokens:
+                removals.append(assoc.ingredient.name)
+                break
+
+    # Deduplicate while preserving order
+    seen = set()
+    ordered_unique: List[str] = []
+    for name in removals:
+        if name not in seen:
+            seen.add(name)
+            ordered_unique.append(name)
+    return ordered_unique
+
+
+def _classify_removal_requests(
+    offering: Offering,
+    ingredients_to_exclude: List[str]
+) -> tuple[List[OfferingIngredient], List[str], List[str]]:
+    """Determine which requested removals are valid for a given offering."""
+    ingredient_lookup = {
+        _normalize_ingredient_name(assoc.ingredient.name): assoc
+        for assoc in offering.ingredients
+    }
+
+    removable_assocs: List[OfferingIngredient] = []
+    skipped_missing: List[str] = []
+    skipped_locked: List[str] = []
+    seen_ingredient_ids: set[int] = set()
+
+    for ingredient_name in ingredients_to_exclude:
+        cleaned_name = (ingredient_name or "").strip()
+        if not cleaned_name:
+            continue
+
+        normalized = _normalize_ingredient_name(cleaned_name)
+        if not normalized:
+            continue
+
+        assoc = ingredient_lookup.get(normalized)
+
+        if not assoc:
+            skipped_missing.append(cleaned_name)
+            continue
+
+        if not assoc.is_removable:
+            skipped_locked.append(assoc.ingredient.name)
+            continue
+
+        if assoc.ingredient_id in seen_ingredient_ids:
+            continue
+
+        seen_ingredient_ids.add(assoc.ingredient_id)
+        removable_assocs.append(assoc)
+
+    return removable_assocs, skipped_missing, skipped_locked
+
+
+def refresh_order_statuses(order_id: Optional[int] = None) -> int:
+    """Advance order item statuses based on elapsed time."""
+    with get_session() as session:
+        query = session.query(OrderItem).filter(
+            OrderItem.order_status.in_(['pending', 'preparing'])
+        )
+
+        if order_id is not None:
+            query = query.filter(OrderItem.order_id == order_id)
+
+        now = datetime.utcnow()
+        updated = 0
+
+        for item in query.all():
+            reference_time = item.sys_update_date or item.sys_creation_date or now
+            elapsed = now - reference_time
+
+            if item.order_status == 'pending' and elapsed >= timedelta(minutes=2):
+                item.order_status = 'preparing'
+                item.sys_update_date = now
+                updated += 1
+            elif item.order_status == 'preparing' and elapsed >= timedelta(minutes=2):
+                item.order_status = 'served'
+                item.sys_update_date = now
+                updated += 1
+
+        if updated:
+            session.commit()
+
+        return updated
 def get_allergens(item_name: str, allergens_to_check: Optional[List[str]] = None) -> List[str]:
     """
     Retrieves potential allergens for a menu item based on its ingredients.
@@ -166,7 +320,7 @@ def placeOrder(order_id: int, item_name: str, quantity: int, special_instruction
     Returns:
         A success or failure message as a string.
     """
-    ingredients_to_exclude = ingredients_to_exclude or []
+    ingredients_to_exclude = list(ingredients_to_exclude or [])
 
     with get_session() as session:
         # 1. Find the offering in the database
@@ -174,6 +328,10 @@ def placeOrder(order_id: int, item_name: str, quantity: int, special_instruction
 
         if not offering:
             raise ValueError(f"Offering '{item_name}' not found.")
+
+        if not ingredients_to_exclude:
+            inferred = _infer_removable_ingredients(offering, special_instructions)
+            ingredients_to_exclude.extend(inferred)
 
         # 2. Check if the requested quantity is available in stock
         if offering.quantity < quantity:
@@ -188,18 +346,16 @@ def placeOrder(order_id: int, item_name: str, quantity: int, special_instruction
         )
         session.add(new_order_item)
 
-        # 4. Handle any ingredient modifications (same as before)
-        for ingredient_name in ingredients_to_exclude:
-            assoc = session.query(OfferingIngredient).join(Ingredient).filter(
-                OfferingIngredient.offering_id == offering.offering_id,
-                Ingredient.name == ingredient_name
-            ).first()
+        # 4. Handle any ingredient modifications (record only removable ones)
+        removable_assocs, skipped_missing, skipped_locked = _classify_removal_requests(
+            offering,
+            ingredients_to_exclude
+        )
 
-            if not assoc:
-                raise ValueError(f"'{ingredient_name}' is not an ingredient of '{item_name}'.")
-            if not assoc.is_removable:
-                raise ValueError(f"Ingredient '{ingredient_name}' cannot be removed from '{item_name}'.")
+        applied_removals: List[str] = []
 
+        for assoc in removable_assocs:
+            applied_removals.append(assoc.ingredient.name)
             modification = OrderItemModification(
                 order_item=new_order_item,
                 ingredient_id_to_remove=assoc.ingredient_id
@@ -209,7 +365,25 @@ def placeOrder(order_id: int, item_name: str, quantity: int, special_instruction
         offering.quantity -= quantity
 
         session.commit()
-        return f"Successfully placed order for {quantity} x '{item_name}' (Order Item ID: {new_order_item.order_item_id})."
+
+        message_parts = [
+            f"Successfully placed order for {quantity} x '{item_name}' (Order Item ID: {new_order_item.order_item_id})."
+        ]
+
+        if applied_removals:
+            message_parts.append(
+                "Noted removable ingredient exclusions: " + ", ".join(applied_removals)
+            )
+        if skipped_missing:
+            message_parts.append(
+                "Skipped unknown ingredients: " + ", ".join(skipped_missing)
+            )
+        if skipped_locked:
+            message_parts.append(
+                "Unable to remove protected ingredients: " + ", ".join(skipped_locked)
+            )
+
+        return " ".join(message_parts)
 
 def cancel_order_item(order_item_id: int) -> str:
     """
@@ -313,29 +487,59 @@ def update_order_item_quantity(order_item_id: int, new_quantity: int) -> str:
             )
 
 
-def receipt(order_id: int, item_names: list[str] = None) -> dict:
+def receipt(order_id: int, item_names: list[str] = None,
+            include_paid: bool = False, include_status: bool = False) -> dict:
+    refresh_order_statuses(order_id)
+
     with get_session() as session:
         query = session.query(OrderItem).options(
             joinedload(OrderItem.offering)
-        ).filter(OrderItem.order_id == order_id)
-        
+        ).filter(
+            OrderItem.order_id == order_id,
+            ~OrderItem.order_status.in_(['cancelled', 'cancelled-completed'])
+        )
+
         if item_names:
             query = query.join(Offering).filter(Offering.name.in_(item_names))
-            
+
+        if not include_paid:
+            query = query.filter(~OrderItem.order_status.in_(['paid', 'paid-completed']))
+        else:
+            query = query.filter(OrderItem.order_status != 'paid-completed')
+
         order_items = query.all()
-        
-        receipt_items = [
-            {"item name": item.offering.name, "item value": float(item.offering.price)}
-            for item in order_items
-        ]
-        
-        total = sum(item.offering.price for item in order_items)
-        
-        return {"items": receipt_items, "total": float(total)}
+
+        receipt_items = []
+        total = 0
+        total_due = 0
+        for item in order_items:
+            entry = {
+                "order_item_id": item.order_item_id,
+                "item name": item.offering.name,
+                "item value": float(item.offering.price),
+                "quantity": item.quantity
+            }
+            if include_status:
+                entry["status"] = item.order_status
+            receipt_items.append(entry)
+            
+            # Total includes: pending, served, preparing, paid (excludes cancelled and paid-completed)
+            if item.order_status in ['pending', 'served', 'preparing', 'paid']:
+                total += item.offering.price * item.quantity
+            
+            # Total due only includes unpaid items: pending, served, preparing
+            if item.order_status in ['pending', 'served', 'preparing']:
+                total_due += item.offering.price * item.quantity
+
+        return {"items": receipt_items, "total": float(total), "total_due": float(total_due)}
+
 
 def payment(order_id: int, item_names: list[str] = None) -> str:
     with get_session() as session:
-        query = session.query(OrderItem).filter(OrderItem.order_id == order_id)
+        query = session.query(OrderItem).filter(
+            OrderItem.order_id == order_id,
+            OrderItem.order_status.in_(['served', 'preparing', 'pending'])
+        )
         
         if item_names:
             query = query.join(Offering).filter(Offering.name.in_(item_names))
@@ -343,13 +547,14 @@ def payment(order_id: int, item_names: list[str] = None) -> str:
         order_items_to_update = query.with_for_update().all()
         
         if not order_items_to_update:
-            return "No items found for the given criteria."
+            return "No unpaid items found for the given criteria."
             
         count = 0
         for item in order_items_to_update:
-            if item.order_status != 'paid':
-                item.order_status = 'paid'
-                count += 1
+            item.order_status = 'paid'
+            count += 1
+        
+        session.commit()
         
         if count > 0:
             return f"Payment successful. {count} item(s) marked as paid."

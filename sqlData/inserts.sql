@@ -69,7 +69,8 @@ INSERT INTO ingredients (ingredient_id, name) VALUES
 (76, 'Orange Slice'), (77, 'Pinot Grigio Grapes'), (78, 'Chardonnay Grapes'), (79, 'Sauvignon Blanc Grapes'), (80, 'Chianti Grapes'),
 (81, 'Barbera Grapes'), (82, 'Nero d''Avola Grapes'), (83, 'Glera Grapes'), (84, 'Coffee Beans'), (85, 'Milk'),
 (86, 'Limoncello'), (87, 'Grappa'), (88, 'Amaro Montenegro'), (89, 'Fernet-Branca'), (90, 'Cynar'),
-(91, 'Eggplant'), (92, 'Zucchini'), (93, 'Bell Peppers');
+(91, 'Eggplant'), (92, 'Zucchini'), (93, 'Bell Peppers'),
+(94, 'Fresh Herbs'), (95, 'Sea Salt'), (96, 'Carrot'), (97, 'Artichoke Hearts');
 
 -- =================================================================
 -- 2. LINKING DATA: Connecting Ingredients to their Attributes
@@ -91,11 +92,11 @@ INSERT INTO ingredient_attributes (ingredient_id, attribute_id) VALUES
 (14, 1), (16, 1), (17, 1), (18, 1), (19, 1), (20, 1), (21, 1), (22, 1), (23, 1), (24, 1),
 (25, 1), (26, 1), (27, 1), (28, 1), (31, 1), (32, 1), (33, 1), (34, 1), (37, 1), (41, 1),
 (42, 1), (43, 1), (44, 1), (45, 1), (47, 1), (49, 1), (51, 1), (52, 1), (53, 1), (54, 1),
-(55, 1), (56, 1), (57, 1), (58, 1), (59, 1), (60, 1), (84, 1), (85, 1), (91, 1), (92, 1), (93, 1),
+(55, 1), (56, 1), (57, 1), (58, 1), (59, 1), (60, 1), (84, 1), (85, 1), (91, 1), (92, 1), (93, 1), (94, 1), (95, 1), (96, 1), (97, 1),
 -- Vegan (a subset of vegetarian)
 (2, 2), (3, 2), (4, 2), (5, 2), (8, 2), (9, 2), (12, 2), (13, 2), (20, 2), (21, 2), (22, 2),
 (23, 2), (24, 2), (26, 2), (32, 2), (33, 2), (34, 2), (41, 2), (42, 2), (44, 2), (49, 2),
-(51, 2), (53, 2), (55, 2), (57, 2), (59, 2), (60, 2), (84, 2), (91, 2), (92, 2), (93, 2),
+(51, 2), (53, 2), (55, 2), (57, 2), (59, 2), (60, 2), (84, 2), (91, 2), (92, 2), (93, 2), (94, 2), (95, 2), (96, 2), (97, 2),
 -- Alcohol
 (25, 11), (70, 11), (71, 11), (73, 11), (74, 11), (75, 11), (77, 11), (78, 11), (79, 11),
 (80, 11), (81, 11), (82, 11), (83, 11), (86, 11), (87, 11), (88, 11), (89, 11), (90, 11);
@@ -159,7 +160,7 @@ INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALU
 -- Pollo ai Funghi
 (11, 38, FALSE), (11, 39, FALSE), (11, 23, FALSE), (11, 25, FALSE),
 -- Spigola
-(12, 40, FALSE), (12, 41, TRUE), (12, 42, TRUE), (12, 13, TRUE);
+(12, 40, FALSE), (12, 41, TRUE), (12, 42, TRUE), (12, 13, TRUE), (12, 94, TRUE);
 
 
 -- 3D. CONTORNI (Category ID: 4)
@@ -171,9 +172,9 @@ INSERT INTO offerings (offering_id, name, description, price, category_id, quant
 
 INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALUES
 -- Patate
-(13, 33, FALSE), (13, 34, TRUE), (13, 3, TRUE), (13, 5, FALSE),
+(13, 33, FALSE), (13, 34, TRUE), (13, 3, TRUE), (13, 5, FALSE), (13, 95, TRUE),
 -- Insalata
-(14, 8, FALSE), (14, 2, TRUE), (14, 5, FALSE),
+(14, 8, FALSE), (14, 2, TRUE), (14, 5, FALSE), (14, 96, TRUE),
 -- Verdure
 (15, 91, FALSE), (15, 92, FALSE), (15, 93, FALSE);
 
@@ -196,7 +197,7 @@ INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALU
 -- Quattro Formaggi
 (18, 43, FALSE), (18, 45, FALSE), (18, 47, FALSE), (18, 11, FALSE), (18, 17, FALSE),
 -- Capricciosa
-(19, 43, FALSE), (19, 44, FALSE), (19, 45, FALSE), (19, 7, TRUE), (19, 23, TRUE), (19, 42, TRUE),
+(19, 43, FALSE), (19, 44, FALSE), (19, 45, FALSE), (19, 7, TRUE), (19, 23, TRUE), (19, 42, TRUE), (19, 97, TRUE),
 -- Gorgonzola, Speck e Noci
 (20, 43, FALSE), (20, 45, FALSE), (20, 47, FALSE), (20, 48, TRUE), (20, 49, TRUE),
 -- Napoli
@@ -286,7 +287,7 @@ INSERT INTO offering_ingredients (offering_id, ingredient_id, is_removable) VALU
 
 
 
-INSERT INTO FAQ (`key`, `value`) VALUES
+INSERT INTO faq (`key`, `value`) VALUES
 ('working_hours', 'We are open Monday to Sunday, from 11:00 AM to 1:00 AM.'),
 ('location', 'You can find us at 123 Pasta Lane, Rome, Italy. Buon appetito!'),
 ('phone_number', 'Feel free to call us at +39 012 345 6789 for any inquiries or reservations.'),

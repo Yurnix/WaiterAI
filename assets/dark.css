@@ -1,0 +1,314 @@
+/* Theme injector (DARK) with BaseWeb control overrides */
+:root{
+    --rosso:#ff4d6d; --vino:#ff6b81; --olio:#7cc27f;
+    --panna:#0e0e0e; --ink:#f2f2f2; --muted:#c9c9c9; --ring:#2b2b2b; --card:#141414;
+    --input-bg:#1a1a1a; --input-text:#f5f5f5; --input-border:#3a3a3a; --input-focus:#ff4d6d44;
+    --tab-unselected:#b7b7b7;
+  }
+  
+  /* Viewport height control */
+  html, body, [data-testid="stAppViewContainer"], .stApp {
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+  
+  .stApp{
+    background: var(--panna) !important;
+    color: var(--ink) !important;
+    font-family: "Lato", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  }
+  
+  /* All text should use dark ink */
+  .stApp * {
+    color: var(--ink) !important;
+  }
+  
+  /* Compact header */
+  .stApp > header {
+    padding: 0.5rem 1rem !important;
+  }
+  
+  .compact-header {
+    margin-bottom: 0.5rem;
+  }
+  
+  .compact-header .stImage {
+    margin-bottom: 0 !important;
+  }
+  
+  .compact-header [data-testid="column"] {
+    padding: 0.25rem !important;
+  }
+  
+  /* Reduce spacing in main content */
+  .main .block-container {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+  }
+  
+  /* Make tabs container scrollable */
+  section[data-testid="stVerticalBlock"] > div {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* Tabs */
+  div[data-baseweb="tab-list"] button{ font-weight:700; letter-spacing:.2px; color: var(--tab-unselected); }
+  div[role="tab"][aria-selected="true"]{ color:var(--rosso); border-bottom:3px solid var(--rosso); }
+
+  /* Cards */
+  .card{ background:var(--card); border:1px solid var(--ring); border-radius:18px; padding:16px; box-shadow:0 1px 0 rgba(0,0,0,.25); }
+  .menu-card .title{ font-family:"Playfair Display", serif; font-size:18px; font-weight:700; margin-bottom:6px; color:var(--ink); }
+  .menu-card .desc{ color:#d9d9d9; font-size:15px; line-height:1.45; }
+  .menu-card .price{ display:inline-block; margin-top:10px; font-weight:800; padding:6px 10px; border-radius:999px; background:#291317; color:#ff9fb0; border:1px solid #4b2027; }
+  .menu-card { margin-bottom:18px; }
+
+  /* Neutral inputs (Streamlit widgets) */
+  .stTextInput input, .stNumberInput input, .stTextArea textarea{
+    background:var(--input-bg) !important; color:var(--input-text) !important;
+    border:1.5px solid var(--input-border) !important; border-radius:12px !important;
+  }
+  .stTextInput input::placeholder, .stTextArea textarea::placeholder{ color:#a6a6a6 !important; }
+  .stCheckbox input[type="checkbox"] { accent-color: var(--rosso) !important; }
+
+  /* BaseWeb Select — DARK */
+  .stSelectbox [data-baseweb="select"]{
+    background: var(--input-bg) !important;
+    border: 1.5px solid var(--input-border) !important;
+    border-radius: 12px !important;
+    color: var(--input-text) !important;
+  }
+  .stSelectbox [data-baseweb="select"] > div,
+  .stSelectbox [data-baseweb="select"] input,
+  .stSelectbox [data-baseweb="select"] svg{
+    background: transparent !important; color: var(--input-text) !important; fill: var(--input-text) !important;
+  }
+  .stSelectbox [data-baseweb="popover"] > div,
+  .stSelectbox [data-baseweb="menu"]{
+    background: #191919 !important; color: #f2f2f2 !important;
+    border: 1px solid var(--input-border) !important; border-radius: 12px !important;
+  }
+  .stSelectbox [data-baseweb="menu"] div[role="option"]{ background:#191919 !important; color:#f2f2f2 !important; }
+  .stSelectbox [data-baseweb="menu"] div[role="option"][aria-selected="true"],
+  .stSelectbox [data-baseweb="menu"] div[role="option"]:hover{ background:#242424 !important; color:#ffffff !important; }
+
+  /* BaseWeb MultiSelect — DARK */
+  .stMultiSelect [data-baseweb="select"]{
+    background: var(--input-bg) !important;
+    border: 1.5px solid var(--input-border) !important;
+    border-radius: 12px !important;
+    color: var(--input-text) !important;
+  }
+  .stMultiSelect [data-baseweb="select"] > div,
+  .stMultiSelect [data-baseweb="select"] input,
+  .stMultiSelect [data-baseweb="select"] svg{
+    background: transparent !important; color: var(--input-text) !important; fill: var(--input-text) !important;
+  }
+  .stMultiSelect [data-baseweb="popover"] > div,
+  .stMultiSelect [data-baseweb="menu"]{
+    background: #191919 !important; color: #f2f2f2 !important;
+    border: 1px solid var(--input-border) !important; border-radius: 12px !important;
+  }
+  .stMultiSelect [data-baseweb="menu"] div[role="option"]{ background:#191919 !important; color:#f2f2f2 !important; }
+  .stMultiSelect [data-baseweb="menu"] div[role="option"][aria-selected="true"],
+  .stMultiSelect [data-baseweb="menu"] div[role="option"]:hover{ background:#242424 !important; color:#ffffff !important; }
+  .stMultiSelect [data-baseweb="tag"]{ background:#242424 !important; color:#f2f2f2 !important; border:1px solid var(--input-border) !important; }
+  .stMultiSelect [data-baseweb="tag"] svg{ fill:#f2f2f2 !important; color:#f2f2f2 !important; }
+
+  /* Chat input */
+  div[data-testid="stChatInput"] > div{
+    background: var(--input-bg) !important; border: 2px solid var(--input-border) !important;
+    border-radius: 18px !important; box-shadow: 0 2px 0 rgba(0,0,0,.4);
+  }
+  div[data-testid="stChatInput"] textarea{ 
+    color: var(--input-text) !important; 
+    background: var(--input-bg) !important; 
+    font-weight:600 !important; 
+  }
+  div[data-testid="stChatInput"] textarea::placeholder {
+    color: var(--muted) !important;
+    opacity: 0.7 !important;
+  }
+  div[data-testid="stChatInput"] textarea:focus::placeholder {
+    opacity: 0 !important;
+  }
+  div[data-testid="stChatInput"] > div:focus-within{ box-shadow: 0 0 0 4px var(--input-focus) !important; border-color: var(--rosso) !important; }
+  div[data-testid="stChatInput"] button{ background: var(--rosso) !important; color:#fff !important; border-radius:12px !important; border:none !important; }
+
+  /* Sticky Tabs: keep the tab bar visible when scrolling */
+  .stTabs,
+  .stTabs [data-baseweb="tab-list"]{
+    position: sticky;
+    top: 0;                     
+    z-index: 1000;             
+    background: var(--panna) !important;   
+    padding: 6px 0;       
+    box-shadow: 0 2px 6px rgba(0,0,0,.5); 
+  }
+  
+  /* Tab content area should match dark base */
+  .stTabs [data-baseweb="tab-panel"] {
+    background: var(--panna) !important;
+  }
+
+  
+/* Chat area layout */
+.chat-shell {
+  background: var(--card);
+  border: 1px solid var(--ring);
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.4);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-scroll {
+  background: var(--card);
+  min-height: 450px;
+  max-height: 450px;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+
+.chat-row {
+  display: flex;
+}
+
+.chat-row-user {
+  justify-content: flex-end;
+}
+
+.chat-row-assistant {
+  justify-content: flex-start;
+}
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 12px 16px;
+  border-radius: 18px;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  background: #1f1f1f;
+  border: 1px solid #2d2d2d;
+  color: var(--ink);
+}
+
+.chat-bubble-user {
+  background: var(--rosso);
+  border: 1px solid #ff6d85;
+  border-radius: 18px 18px 4px 18px;
+  color: #ffffff;
+}
+
+.chat-bubble-assistant {
+  background: #1e2b21;
+  border: 1px solid #32543a;
+  border-radius: 18px 18px 18px 4px;
+  color: #c6f0c9;
+}
+
+.chat-bubble a {
+  color: var(--vino);
+  text-decoration: underline;
+}
+
+.typing-bubble {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+  
+  /* Typing indicator animation */
+  @keyframes typingDot {
+    0%, 60%, 100% { 
+      transform: translateY(0);
+      opacity: 0.4;
+    }
+    30% { 
+      transform: translateY(-10px);
+      opacity: 1;
+    }
+  }
+  
+  .typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 0;
+  }
+  
+  .typing-indicator span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--muted);
+    display: inline-block;
+    animation: typingDot 1.4s infinite;
+  }
+  
+  .typing-indicator span:nth-child(1) {
+    animation-delay: 0s;
+  }
+  
+  .typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  /* Prevent widget artifacts inside the pure HTML grid */
+  .menu-grid{ margin-top:6px; }
+  .menu-grid [data-testid="stWidget"], .menu-grid .stTextInput, .menu-grid .stNumberInput,
+  .menu-grid .stTextArea, .menu-grid .stSelectbox, .menu-grid .stMultiSelect,
+  .menu-grid div[data-testid="stTextInputRoot"], .menu-grid div[data-testid="stNumberInput"]{ display:none !important; }
+
+  /* Grid for pure HTML menu cards */
+  .menu-grid2{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:16px; margin-top:6px; }
+  .menu-grid2 .menu-card{ background:var(--card); border:1px solid var(--ring); border-radius:18px; padding:16px; box-shadow:0 1px 0 rgba(0,0,0,.25); }
+  .menu-grid2 .menu-card .title{ font-family:"Playfair Display", serif; font-size:18px; font-weight:700; margin-bottom:6px; color: var(--ink); }
+  .menu-grid2 .menu-card .desc{ color:#d9d9d9; font-size:15px; line-height:1.45; }
+  .menu-grid2 .menu-card .price{ display:inline-block; margin-top:10px; font-weight:800; padding:6px 10px; border-radius:999px; background:#291317; color:#ff9fb0; border:1px solid #4b2027; }
+
+  div[data-testid="stMetricValue"]{ font-weight:800; }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .main .block-container {
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+    
+    .menu-grid2 {
+      grid-template-columns: 1fr !important;
+    }
+    
+    /* Reduce logo size on mobile */
+    .stApp img {
+      max-width: 150px !important;
+    }
+    
+    /* Stack columns on mobile */
+    div[data-testid="column"] {
+      min-width: 100% !important;
+    }
+  }
+  
+  /* Hide Streamlit footer and menu to save space */
+  footer {display: none !important;}
+  #MainMenu {visibility: hidden !important;}
+  header {visibility: visible !important;}
+  
+  /* Reduce chat input padding */
+  div[data-testid="stChatInput"] {
+    padding: 0.5rem 0 !important;
+  }

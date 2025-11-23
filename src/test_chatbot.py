@@ -4,7 +4,7 @@ This script provides a terminal-based interface to chat with the AI assistant.
 """
 import os
 from dotenv import load_dotenv
-from anthropic_llm import AnthropicLLM
+from src.anthropic_llm import AnthropicLLM
 from anthropic.types import MessageParam
 from typing import List
 
@@ -108,25 +108,6 @@ def main():
             
             elif user_input.lower() == 'history':
                 print_chat_history(chat_history)
-                continue
-            
-            elif user_input.lower() == 'orders':
-                print_separator('-')
-                print("ALL ORDERS:")
-                print_separator('-')
-                orders = order_component.get_all_orders()
-                if not orders:
-                    print("No orders placed yet.")
-                else:
-                    for order in orders:
-                        print(f"\nOrder ID: {order['order_id']}")
-                        print(f"  Item: {order['item_name']}")
-                        print(f"  Quantity: {order['quantity']}")
-                        print(f"  Status: {order['status']}")
-                        if order['special_instructions']:
-                            print(f"  Special Instructions: {order['special_instructions']}")
-                print_separator('-')
-                print()
                 continue
             
             elif user_input.lower() == 'clear':
